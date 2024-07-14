@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title>KyleWiki</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-dark.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { --color-background: #242B33; --color-content-background: #444B53; --color-text: #FFFFFF; background-color: var(--color-background); color: var(--color-text); font-family: Roboto,sans-serif; }
+    .header { align-items: flex-end; border-bottom: 1px solid var(--color-content-background); display: flex; margin: 0 auto 0 auto; max-width: 780px; min-width: 200px; padding: 15px 15px 5px 15px; }
+    .title { color: var(--color-text); flex-grow: 1; font-weight: 750; font-size: 2em; text-decoration: none; }
+    .menu { color: var(--color-text); margin-left: 10px; text-decoration: none; }
+    .layout { margin: 0 auto; max-width: 780px; min-width: 200px; padding: 15px; }
+    .markdown-body { background-color: var(--color-content-background); border: 1px solid var(--color-content-background); border-radius: 10px; box-sizing: border-box; color: var(--color-text); margin: 0 auto; max-width: 750px; min-width: 200px; padding: 15px; }
+    .markdown-body h1, .markdown-body h2 { border-bottom: 1px solid var(--color-text); }
+    .markdown-body pre { padding: 0px; }
+    .markdown-body pre.mermaid { background-color: white; }
+    .footer { border-top: 1px solid var(--color-content-background); color: var(--color-text); margin: 0 auto 15px auto; max-width: 780px; min-width: 200px; padding: 5px; }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+</head>
+<body>
+  <div id="header" class="header"></div>
+  <div class="layout">
+    <div id="content" class="markdown-body"></div>
+  </div>
+  <div id="footer" class="footer"></div>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: false });
+    const mermaidRenderer = { name: 'code', level: 'block', renderer({ lang, text }) { if(lang !== 'mermaid') return false; return "<pre class=\"mermaid\">" + text + "</pre>"; }};
+    marked.use({ extensions: [mermaidRenderer] });
+    fetch("header.html").then(response => response.text()).then(text => { document.getElementById("header").innerHTML = text; });
+    const search = new URLSearchParams(window.location.search);
+    const path = search.get("p");
+    const file = (path == null || path == "") ? "home" : path;
+    fetch(file + ".md").then(response => response.text()).then(text => { document.getElementById("content").innerHTML = marked.parse(text); mermaid.run(); hljs.highlightAll(); });
+    fetch("footer.html").then(response => response.text()).then(text => { document.getElementById("footer").innerHTML = text; });
+  </script>
+</body>
+</html>

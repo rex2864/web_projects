@@ -1,0 +1,7 @@
+{
+  "category" : ["SearchEngine","Multimedia"],
+  "bookmark" : [
+    {"category":"SearchEngine","name":"Google","url":"https://www.google.com","icon":"icon/google.svg"},
+    {"category":"Multimedia","name":"Youtube","url":"https://youtube.com","icon":"icon/youtube.svg"}
+  ]
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title>KyleStartPage</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900" />
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{--color-background:#242B33;--color-primary:#EFFBFF;--color-accent:#6EE2FF;--item-width:250px;--item-height:40px;--icon-size:35px;background-color:var(--color-background);font-family:Roboto,sans-serif;font-size:14px;}
+    a{color:var(--color-primary);text-decoration:none;}
+    .layout{align-content:center;display:flex;flex-wrap:wrap;margin:0 auto;max-width:calc(var(--item-width) * 4 + 40px);}
+    .category_box{border-bottom:1px solid var(--color-primary);height:var(--item-height);margin:5px;width:calc(var(--item-width) * 4 + 30px);}
+    .category_text{margin:15px auto;overflow:hidden;text-decoration:none;white-space:nowrap;}
+    .category_text h5{color:var(--color-primary);font-size:1.5em;font-weight:500;margin-top:0px;text-transform:uppercase;}
+    .box{height:var(--item-height);margin:5px;width:var(--item-width);}
+    .item{align-items:center;display:flex;width:100%;}
+    .item_icon{height:var(--icon-size);margin-right:5px;width:var(--icon-size);}
+    .item_icon img{height:90%;margin-left:2px;margin-top:2px;object-fit:contain;width:90%;}
+    .item_text{max-width:calc(var(--item-width)-var(--icon-size));overflow:hidden;text-decoration:none;white-space:nowrap;}
+    .item_text h5{color:var(--color-primary);font-size:1em;font-weight:500;margin-bottom:-4px;margin-top:0px;text-transform:uppercase;}
+    .item_text span{color:var(--color-accent);font-size:.8em;font-weight:400;opacity:1;text-transform:lowercase;}
+  </style>
+</head>
+<body>
+  <div id="bookmark" class="layout">
+    <script type="text/html" id="category-template">
+      <div class="category_box">
+        <div class="category_text">
+          <h5>{category_name}</h5>
+        </div>
+      </div>
+    </script>
+    <script type="text/html" id="bookmark-template">
+      <div class="box">
+        <a href="{url}" class="item">
+          <div class="item_icon">
+            <img src="{icon}" />
+          </div>
+          <div class="item_text">
+            <h5>{name}</h5>
+            <span>{url}</span>
+          </div>
+        </a>
+      </div>
+    </script>
+  </div>
+  <div>&nbsp;</div>
+  <script type="text/javascript">
+    fetch("bookmark.json").then(response => response.json()).then(data => {
+      const category_src = document.getElementById("category-template").innerHTML;
+      const bookmark_src = document.getElementById("bookmark-template").innerHTML;
+      var res = "";
+      for(let cat of data.category) {
+        res += category_src.replace(/{category_name}/g, cat);
+        for(let bm of data.bookmark) {
+          if(bm.category != cat) continue;
+          res += bookmark_src.replace(/{name}/g, bm.name).replace(/{url}/g, bm.url).replace(/{icon}/g, bm.icon);
+        }
+      }
+      document.getElementById("bookmark").innerHTML = res;
+    });
+  </script>
+</body>
+</html>
